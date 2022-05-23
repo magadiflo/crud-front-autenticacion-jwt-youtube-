@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 
 const TOKEN_KEY: string = 'AuthToken';
-const USERNAME_KEY: string = 'AuthUserName';
-const AUTHORITIES_KEY: string = 'AuthAuthorities';
 
 @Injectable({
   providedIn: 'root'
@@ -11,44 +10,49 @@ export class TokenService {
 
   roles: string[] = [];
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   get token(): string {
-    return sessionStorage.getItem(TOKEN_KEY);
+    return localStorage.getItem(TOKEN_KEY);
   }
 
   get username(): string {
-    return sessionStorage.getItem(USERNAME_KEY);
+    if (!this.isLogged()) {
+      return null;
+    }
+    const token = this.token;
+    const payload = token.split('.')[1];
+    const payloadDecoded = atob(payload);
+    const values = JSON.parse(payloadDecoded);
+    const username = values.sub;
+
+    return username;
   }
 
-  get authorities(): string[] {
-    this.roles = [];
-    if (sessionStorage.getItem(AUTHORITIES_KEY)) {
-      JSON.parse(sessionStorage.getItem(AUTHORITIES_KEY)).forEach((authority: any) => {
-        console.log(authority);
-        this.roles.push(authority.authority);
-      });
+  get isAdmin(): boolean {
+    if (!this.isLogged()) {
+      return false;
     }
-    return this.roles;
+    const token = this.token;
+    const payload = token.split('.')[1];
+    const payloadDecoded = atob(payload);
+    const values = JSON.parse(payloadDecoded);
+    const roles = values.roles;
+    return roles.indexOf('ROLE_ADMIN') != -1;
   }
 
   setToken(token: string): void {
-    window.sessionStorage.removeItem(TOKEN_KEY);
-    window.sessionStorage.setItem(TOKEN_KEY, token);
+    window.localStorage.removeItem(TOKEN_KEY);
+    window.localStorage.setItem(TOKEN_KEY, token);
   }
 
-  setUsername(username: string): void {
-    window.sessionStorage.removeItem(USERNAME_KEY);
-    window.sessionStorage.setItem(USERNAME_KEY, username);
-  }
-
-  setAuthorities(authorities: string[]): void {
-    window.sessionStorage.removeItem(AUTHORITIES_KEY);
-    window.sessionStorage.setItem(AUTHORITIES_KEY, JSON.stringify(authorities));
+  isLogged(): boolean {
+    return this.token ? true : false;
   }
 
   logOut(): void {
-    window.sessionStorage.clear();
+    window.localStorage.clear();
+    this.router.navigate(['/login']);
   }
 
 }

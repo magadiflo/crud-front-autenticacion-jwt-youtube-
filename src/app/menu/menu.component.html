@@ -13,6 +13,9 @@
             <li *ngIf="isLogged" class="nav-item">
                 <a class="nav-link" routerLink="/lista"><i class="far fa-list-alt"></i> Lista</a>
             </li>
+            <li *ngIf="isAdmin" class="nav-item">
+                <a class="nav-link" routerLink="/nuevo"><i class="fas fa-plus-circle"></i> Nuevo Producto</a>
+            </li>
             <li *ngIf="!isLogged" class="nav-item">
                 <a class="nav-link" routerLink="/login"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</a>
             </li>
