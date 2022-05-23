@@ -13,8 +13,6 @@ import { NuevoUsuario } from '../../models/nuevo-usuario';
 })
 export class RegistroComponent implements OnInit {
 
-  isLogged: boolean = false;
-
   nuevoUsuario: NuevoUsuario;
   nombre: string;
   nombreUsuario: string;
@@ -29,9 +27,6 @@ export class RegistroComponent implements OnInit {
     private toastr: ToastrService) { }
 
   ngOnInit() {
-    if (this.tokenSservice.token) { //Sí estamos logueados
-      this.isLogged = true;
-    }
   }
 
   onRegister(): void {
@@ -46,7 +41,7 @@ export class RegistroComponent implements OnInit {
         err => {
           this.errMsj = err.error.mensaje;
           // this.toastr.error(this.errMsj, '¡Error al registrar!');
-          alert('Error: '+ this.errMsj);
+          alert('Error: ' + this.errMsj);
           console.log(this.errMsj);
         });
   }

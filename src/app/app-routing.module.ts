@@ -8,11 +8,20 @@ import { IndexComponent } from './index/index.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegistroComponent } from './auth/registro/registro.component';
 import { ProductoGuard } from './guards/producto.guard';
+import { LoginGuard } from './guards/login.guard';
 
 const routes: Routes = [
   { path: '', component: IndexComponent },
-  { path: 'login', component: LoginComponent },
-  { path: 'registro', component: RegistroComponent },
+  { 
+    path: 'login', 
+    component: LoginComponent,
+    canActivate: [LoginGuard],
+  },
+  { 
+    path: 'registro', 
+    component: RegistroComponent,
+    canActivate: [LoginGuard],
+  },
   {
     path: 'lista',
     component: ListaProductoComponent,
