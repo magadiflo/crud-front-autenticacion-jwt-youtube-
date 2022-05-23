@@ -11,14 +11,16 @@ import { EditarProductoComponent } from './producto/editar-producto.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegistroComponent } from './auth/registro/registro.component';
 
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 // external
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+
 import { MenuComponent } from './menu/menu.component';
 import { IndexComponent } from './index/index.component';
+import { ProductoInterceptor } from './interceptors/producto.interceptor';
 
 
 @NgModule({
@@ -41,7 +43,9 @@ import { IndexComponent } from './index/index.component';
     HttpClientModule,
     FormsModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: ProductoInterceptor, multi: true },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
