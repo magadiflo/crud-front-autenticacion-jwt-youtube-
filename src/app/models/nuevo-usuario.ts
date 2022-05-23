@@ -1,7 +1,9 @@
 export class NuevoUsuario {
-    nombre: string;
-    nombreUsuario: string;
-    email: string;
-    password: string;
-    authorities: string[];
+
+    constructor(
+        public nombre: string,
+        public nombreUsuario: string,
+        public email: string,
+        public password: string) { }
+
 }

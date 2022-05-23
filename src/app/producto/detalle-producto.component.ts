@@ -27,9 +27,10 @@ export class DetalleProductoComponent implements OnInit {
         this.producto = data;
       },
       err => {
-        this.toastr.error(err.error.mensaje, 'Fail', {
-          timeOut: 3000,  positionClass: 'toast-top-center',
-        });
+        // this.toastr.error(err.error.mensaje, 'Fail', {
+        //   timeOut: 3000,  positionClass: 'toast-top-center',
+        // });
+        alert(err.error.mensaje);
         this.volver();
       }
     );
