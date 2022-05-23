@@ -13,7 +13,12 @@
                     <input type="number" class="form-control" id="precio" name="precio"
                     [(ngModel)]="producto.precio" required>
                 </div>
-                <button class="btn btn-outline-success btn-block" [disabled]="!f.valid">Actualizar</button>
+                <button type="submit" class="btn btn-outline-success btn-block" [disabled]="!f.valid">
+                    <i class="fas fa-pencil-alt"></i> Actualizar
+                </button>
+                <button type="button" routerLink="/lista" class="btn btn-outline-success btn-block">
+                    <i class="fas fa-arrow-alt-circle-left"></i> Volver
+                </button>
             </form>
         </div>
     </div>
