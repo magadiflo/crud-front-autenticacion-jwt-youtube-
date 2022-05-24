@@ -21,6 +21,8 @@ import { ToastrModule } from 'ngx-toastr';
 import { MenuComponent } from './menu/menu.component';
 import { IndexComponent } from './index/index.component';
 import { ProductoInterceptor } from './interceptors/producto.interceptor';
+import { SendEmailComponent } from './changePassword/send-email/send-email.component';
+import { ChangePasswordComponent } from './changePassword/change-password/change-password.component';
 
 
 @NgModule({
@@ -34,6 +36,8 @@ import { ProductoInterceptor } from './interceptors/producto.interceptor';
     RegistroComponent,
     MenuComponent,
     IndexComponent,
+    SendEmailComponent,
+    ChangePasswordComponent,
   ],
   imports: [
     BrowserModule,

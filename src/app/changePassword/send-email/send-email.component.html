@@ -1,0 +1,32 @@
+<app-menu></app-menu>
+<div class="container d-flex justify-content-center">
+    <div class="card">
+        <div class="card-header">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/login">Iniciar sesión</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLink="/registro">Crear cuenta</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" routerLink="/send-email">Olvidé mi contraseña</a>
+                </li>
+            </ul>
+        </div>
+        <div class="card-body">
+            <form #f="ngForm" (ngSubmit)="onSendEmail()">
+                <div class="alert alert-info text-muted">Enviaremos un enlace a tu correo para restaurar tu contraseña</div>
+                <div class="form-group">
+                    <label for="mailTo">Nombre de usuario o email</label>
+                    <input type="text" [(ngModel)]="mailTo" id="mailTo" name="mailTo" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit" [disabled]="f.invalid" class="btn btn-success btn-block">
+                        <i class="fas fa-sign-in-alt"></i> Enviar Correo
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

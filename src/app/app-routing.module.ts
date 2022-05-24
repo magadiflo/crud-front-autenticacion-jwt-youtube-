@@ -9,17 +9,29 @@ import { LoginComponent } from './auth/login/login.component';
 import { RegistroComponent } from './auth/registro/registro.component';
 import { ProductoGuard } from './guards/producto.guard';
 import { LoginGuard } from './guards/login.guard';
+import { SendEmailComponent } from './changePassword/send-email/send-email.component';
+import { ChangePasswordComponent } from './changePassword/change-password/change-password.component';
 
 const routes: Routes = [
   { path: '', component: IndexComponent },
-  { 
-    path: 'login', 
+  {
+    path: 'login',
     component: LoginComponent,
     canActivate: [LoginGuard],
   },
-  { 
-    path: 'registro', 
+  {
+    path: 'registro',
     component: RegistroComponent,
+    canActivate: [LoginGuard],
+  },
+  {
+    path: 'send-email',
+    component: SendEmailComponent,
+    canActivate: [LoginGuard],
+  },
+  {
+    path: 'change-password/:tokenPassword',
+    component: ChangePasswordComponent,
     canActivate: [LoginGuard],
   },
   {
