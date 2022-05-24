@@ -35,7 +35,8 @@ export class ProductoInterceptor implements HttpInterceptor {
         return next.handle(intReq)
             .pipe(
                 catchError((err: HttpErrorResponse) => {
-                    if (err.status === 401) { //*Si nos devuelve el 401, significa que ya expiró, volvemos a refrescar el token
+                    //*Si nos devuelve el 401 (significa que ya expiró el token) y además estamos logueados, entonces volvemos a refrescar el token
+                    if (err.status === 401 && this.tokenService.isLogged()) {
                         //*Refresh token
                         const dto: JwtDTO = new JwtDTO(this.tokenService.token);
                         return this.authService.refresh(dto)
