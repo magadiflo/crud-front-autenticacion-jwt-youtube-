@@ -1,8 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError, concatMap } from 'rxjs/operators';
 
 import { TokenService } from '../service/token.service';
+import { JwtDTO } from '../models/jwt-dto';
+import { AuthService } from '../service/auth.service';
+
+const AUTHORIZATION: string = 'Authorization';
 
 /**
  * Un Interceptor no es nada más que un servicio
@@ -14,17 +19,46 @@ import { TokenService } from '../service/token.service';
 })
 export class ProductoInterceptor implements HttpInterceptor {
 
-    constructor(private tokenService: TokenService) { }
+    constructor(
+        private tokenService: TokenService,
+        private authService: AuthService) { }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        if (!this.tokenService.isLogged) {
+            return next.handle(req);
+        }
         let intReq = req;
         const token = this.tokenService.token;
-        if (token != null) {
-            intReq = req.clone({
-                headers: req.headers.set('Authorization', 'Bearer ' + token)
-            });
-        }
-        return next.handle(intReq);
+
+        intReq = this.addToken(req, token);
+
+        return next.handle(intReq)
+            .pipe(
+                catchError((err: HttpErrorResponse) => {
+                    if (err.status === 401) { //*Si nos devuelve el 401, significa que ya expiró, volvemos a refrescar el token
+                        //*Refresh token
+                        const dto: JwtDTO = new JwtDTO(this.tokenService.token);
+                        return this.authService.refresh(dto)
+                            .pipe(
+                                concatMap((data: any) => {
+                                    console.log('refreshing...');
+                                    this.tokenService.setToken(data.token);
+                                    intReq = this.addToken(req, data.token);
+                                    return next.handle(intReq);
+                                })
+                            );
+                    } else { //* Cualquier otro tipo de error lo deslogueamos
+                        this.tokenService.logOut();
+                        return throwError(err);
+                    }
+                })
+            );
+    }
+
+    private addToken(req: HttpRequest<any>, token: string): HttpRequest<any> {
+        return req.clone({
+            headers: req.headers.set(AUTHORIZATION, 'Bearer ' + token)
+        });
     }
 
 }
